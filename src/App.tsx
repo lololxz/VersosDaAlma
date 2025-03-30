@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Poems from "./pages/Poems";
 import NotFound from "./pages/NotFound";
 
+// Configuração do cliente de consulta
 const queryClient = new QueryClient();
 
 const App = () => (

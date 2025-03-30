@@ -25,7 +25,7 @@ const Poems = () => {
     setPoem("");
 
     try {
-      // Usando a API do GPTeng para gerar poemas
+      // Usando a API para gerar poemas
       const response = await fetch("https://api.gpteng.co/generate", {
         method: "POST",
         headers: {
@@ -71,40 +71,41 @@ const Poems = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block text-indigo-600">Poemas</span>
-            <span className="block">Inspirados por GPTeng</span>
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+            <span className="block text-purple-400">Versos</span>
+            <span className="block text-indigo-300">da Alma</span>
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Digite um tema e deixe a magia da poesia acontecer. Nossa IA criará um poema único e especial para você.
+          <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Digite um tema e deixe a magia da poesia acontecer. Nossa inspiração criará um poema único e especial para você.
           </p>
         </div>
 
-        <Card className="shadow-lg">
+        <Card className="shadow-lg bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle>Gerador de Poemas</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Gerador de Poemas</CardTitle>
+            <CardDescription className="text-gray-400">
               Digite um tema para inspirar seu poema
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="theme">Tema do Poema</Label>
+                <Label htmlFor="theme" className="text-gray-200">Tema do Poema</Label>
                 <Input
                   id="theme"
                   placeholder="Ex: amor, natureza, saudade..."
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
                   disabled={isLoading}
+                  className="bg-gray-700 text-white border-gray-600 placeholder:text-gray-400"
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-purple-600 hover:bg-purple-700" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -123,19 +124,19 @@ const Poems = () => {
 
             {poem && (
               <div className="mt-6">
-                <Label htmlFor="poem">Seu Poema</Label>
+                <Label htmlFor="poem" className="text-gray-200">Seu Poema</Label>
                 <div className="relative mt-2">
                   <Textarea
                     id="poem"
                     value={poem}
                     readOnly
-                    className="min-h-[200px] font-serif text-gray-800 leading-relaxed"
+                    className="min-h-[200px] font-serif text-white leading-relaxed bg-gray-700 border-gray-600"
                   />
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={copyToClipboard}
-                    className="absolute top-2 right-2"
+                    className="absolute top-2 right-2 text-gray-300 hover:text-white"
                     aria-label="Copiar poema"
                   >
                     <Copy className="h-4 w-4" />
@@ -144,9 +145,9 @@ const Poems = () => {
               </div>
             )}
           </CardContent>
-          <CardFooter className="flex justify-between text-sm text-gray-500">
+          <CardFooter className="flex justify-between text-sm text-gray-400">
             <p>Compartilhe seu poema com amigos</p>
-            <p>Gerado por GPTeng</p>
+            <p>Versos da Alma</p>
           </CardFooter>
         </Card>
       </div>
