@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, HeartHandshake, Copy } from "lucide-react";
+import { Loader2, HeartHandshake, Copy, BookOpen, Stars } from "lucide-react";
 import { toast } from "sonner";
 
 const Poems = () => {
@@ -88,41 +88,51 @@ const Poems = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-10">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-950 to-gray-950 py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 to-transparent"></div>
+      
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <div className="text-center mb-10 animate-fade-in">
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-            <span className="block text-purple-400">Versos</span>
-            <span className="block text-indigo-300">da Alma</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-300">Versos</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400">da Alma</span>
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          <p className="mt-5 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-6 md:text-xl md:max-w-3xl">
             Digite um tema e deixe a magia da poesia acontecer. Nossa inspiração criará um poema único e especial para você.
           </p>
         </div>
 
-        <Card className="shadow-lg bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white">Gerador de Poemas</CardTitle>
-            <CardDescription className="text-gray-400">
+        <Card className="shadow-xl backdrop-blur-sm bg-gray-900/80 border-gray-700 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-800/10 to-indigo-900/10 pointer-events-none"></div>
+          
+          <CardHeader className="relative z-10">
+            <div className="flex items-center justify-center mb-2">
+              <BookOpen className="h-6 w-6 text-purple-400 mr-2" />
+            </div>
+            <CardTitle className="text-white text-center text-2xl">Gerador de Poemas</CardTitle>
+            <CardDescription className="text-gray-400 text-center">
               Digite um tema para inspirar seu poema
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          
+          <CardContent className="relative z-10">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="theme" className="text-gray-200">Tema do Poema</Label>
-                <Input
-                  id="theme"
-                  placeholder="Ex: amor, natureza, saudade..."
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
-                  disabled={isLoading}
-                  className="bg-gray-700 text-white border-gray-600 placeholder:text-gray-400"
-                />
+                <Label htmlFor="theme" className="text-gray-200 text-sm uppercase tracking-wider">Tema do Poema</Label>
+                <div className="relative">
+                  <Input
+                    id="theme"
+                    placeholder="Ex: amor, natureza, saudade..."
+                    value={theme}
+                    onChange={(e) => setTheme(e.target.value)}
+                    disabled={isLoading}
+                    className="bg-gray-800/50 text-white border-gray-600 placeholder:text-gray-500 pr-10 focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
               </div>
               <Button 
                 type="submit" 
-                className="w-full bg-purple-600 hover:bg-purple-700" 
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -133,41 +143,57 @@ const Poems = () => {
                 ) : (
                   <>
                     <HeartHandshake className="mr-2 h-4 w-4" />
-                    Gerar Poema
+                    Inspirar Poesia
                   </>
                 )}
               </Button>
             </form>
 
             {poem && (
-              <div className="mt-6">
-                <Label htmlFor="poem" className="text-gray-200">Seu Poema</Label>
-                <div className="relative mt-2">
+              <div className="mt-8 animate-fade-in">
+                <div className="flex items-center mb-2">
+                  <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent flex-grow"></div>
+                  <span className="px-3 text-gray-400 text-sm uppercase tracking-wider">Seu Poema</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent flex-grow"></div>
+                </div>
+                <div className="relative mt-2 p-6 bg-gray-800/30 border border-gray-700 rounded-lg">
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/5 to-indigo-500/5 rounded-lg pointer-events-none"></div>
                   <Textarea
                     id="poem"
                     value={poem}
                     readOnly
-                    className="min-h-[200px] font-serif text-white leading-relaxed bg-gray-700 border-gray-600"
+                    className="min-h-[200px] font-serif text-white leading-relaxed bg-transparent border-none focus:ring-0 resize-none"
+                    style={{ fontFamily: '"Playfair Display", serif' }}
                   />
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={copyToClipboard}
-                    className="absolute top-2 right-2 text-gray-300 hover:text-white"
-                    aria-label="Copiar poema"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+                  <div className="absolute top-4 right-4 bg-gray-900/50 backdrop-blur-sm rounded-full p-1">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={copyToClipboard}
+                      className="text-gray-300 hover:text-white h-8 w-8 p-0"
+                      aria-label="Copiar poema"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1">
+                    <div className="text-purple-400/20">
+                      <BookOpen className="h-20 w-20" />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
           </CardContent>
-          <CardFooter className="flex justify-between text-sm text-gray-400">
-            <p>Compartilhe seu poema com amigos</p>
-            <p>Versos da Alma</p>
+          
+          <CardFooter className="flex justify-between text-sm text-gray-500 relative z-10">
+            <p>Compartilhe sua inspiração</p>
+            <p className="font-serif italic">Versos da Alma</p>
           </CardFooter>
         </Card>
       </div>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" />
     </div>
   );
 };
