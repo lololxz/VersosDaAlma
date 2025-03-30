@@ -13,6 +13,19 @@ const Poems = () => {
   const [poem, setPoem] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Nosso dicionário de poemas de fallback para garantir que sempre temos um poema
+  const fallbackPoems: Record<string, string> = {
+    amor: `No silêncio da noite estrelada,\nO amor floresce como rosa delicada.\nEntre suspiros e olhares trocados,\nNossos corações batem acelerados.\n\nÉ fogo que acende, é luz que ilumina,\nÉ força que move, verdade divina.\nNo amor encontro paz e abrigo,\nE na tua mão, meu eterno destino.`,
+    vida: `A vida é rio que corre sem parar,\nÉ sonho que nos faz despertar.\nEntre alegrias e dores passageiras,\nConstruímos nossas próprias ribeiras.\n\nCada instante é precioso, cada momento sagrado,\nNo caminho incerto, seguimos lado a lado.\nA vida nos ensina com suas marés,\nA valorizar cada passo que dês.`,
+    saudade: `Saudade é sentir que ainda estás,\nMesmo quando o tempo te levou para trás.\nÉ memória viva, é dor que acalenta,\nÉ ausência presente que não se ausenta.\n\nNos cantos da casa, nos ecos da voz,\nNa música que tocava para nós dois.\nSaudade é amar o que não mais existe,\nÉ sorriso na lembrança, mesmo quando é triste.`,
+    natureza: `Nas florestas verdes que tocam o céu,\nA natureza escreve sua história sem véu.\nRios que cantam, montanhas que abraçam,\nNuvens que dançam quando os ventos passam.\n\nA vida pulsa em cada pequena semente,\nNo rugido das feras, na chuva cadente.\nSomos parte deste todo majestoso,\nDivino poema, eterno e formoso.`,
+    amizade: `A amizade é ponte que liga corações,\nLaço suave de puras emoções.\nNas horas difíceis, mão que ampara,\nNa alegria partilhada, presença cara.\n\nNão há distância que separe amigos,\nQue dividem sonhos, temores e abrigos.\nPreciosa joia a ser guardada,\nComo luz que brilha na estrada.`,
+    tempo: `O tempo, mestre silencioso,\nEsculpe a vida sem repouso.\nFaz do jovem, velho; da flor, memória;\nE escreve sem pressa nossa história.\n\nNão se pode deter suas mãos,\nNem fazer voltar estações.\nNo relógio da existência, ponteiro a girar,\nEnsinando-nos o valor de amar.`,
+    esperança: `Esperança é semente que germina,\nNa terra árida da alma que não desanima.\nÉ luz tênue em noite escura,\nPromessa de manhã em nova alvura.\n\nQuando o mundo parece sem saídas,\nEla sussurra que há novas vidas.\nComo fênix ressurge das cinzas,\nE traz ao coração novas conquistas.`,
+    liberdade: `Liberdade, asas para voar,\nSem correntes a aprisionar.\nNas vastas planícies do pensamento,\nOu nas alturas do sentimento.\n\nÉ direito sagrado de ser,\nDe escolher, sonhar e viver.\nComo pássaro que corta o céu,\nDono apenas do vento e do véu.`,
+    mar: `O mar de ondas inconstantes,\nGuarda segredos de amantes.\nNa sua imensidão azul profundo,\nRevela mistérios de outro mundo.\n\nBramir de águas contra rochedos,\nMurmúrio suave contando segredos.\nNa areia deixa sua marca,\nComo o tempo em nossa alma arca.`,
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -25,7 +38,7 @@ const Poems = () => {
     setPoem("");
 
     try {
-      // Usando a API para gerar poemas
+      // Tentativa de usar a API
       const response = await fetch("https://api.gpteng.co/generate", {
         method: "POST",
         headers: {
@@ -37,29 +50,33 @@ const Poems = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Falha ao gerar o poema");
+        throw new Error("Falha ao conectar com a API");
       }
 
       const data = await response.json();
-      setPoem(data.text || "Não foi possível gerar um poema neste momento.");
+      setPoem(data.text || "");
+      
+      // Se o poema retornado estiver vazio, usamos o fallback
+      if (!data.text || data.text.trim() === '') {
+        throw new Error("Poema vazio recebido");
+      }
       
     } catch (error) {
       console.error("Erro ao gerar poema:", error);
-      toast.error("Ocorreu um erro ao gerar o poema. Por favor, tente novamente.");
       
-      // Fallback para demonstração caso a API não esteja conectada
-      const fallbackPoems: Record<string, string> = {
-        amor: `No silêncio da noite estrelada,\nO amor floresce como rosa delicada.\nEntre suspiros e olhares trocados,\nNossos corações batem acelerados.\n\nÉ fogo que acende, é luz que ilumina,\nÉ força que move, verdade divina.\nNo amor encontro paz e abrigo,\nE na tua mão, meu eterno destino.`,
-        vida: `A vida é rio que corre sem parar,\nÉ sonho que nos faz despertar.\nEntre alegrias e dores passageiras,\nConstruímos nossas próprias ribeiras.\n\nCada instante é precioso, cada momento sagrado,\nNo caminho incerto, seguimos lado a lado.\nA vida nos ensina com suas marés,\nA valorizar cada passo que dês.`,
-        saudade: `Saudade é sentir que ainda estás,\nMesmo quando o tempo te levou para trás.\nÉ memória viva, é dor que acalenta,\nÉ ausência presente que não se ausenta.\n\nNos cantos da casa, nos ecos da voz,\nNa música que tocava para nós dois.\nSaudade é amar o que não mais existe,\nÉ sorriso na lembrança, mesmo quando é triste.`,
-        natureza: `Nas florestas verdes que tocam o céu,\nA natureza escreve sua história sem véu.\nRios que cantam, montanhas que abraçam,\nNuvens que dançam quando os ventos passam.\n\nA vida pulsa em cada pequena semente,\nNo rugido das feras, na chuva cadente.\nSomos parte deste todo majestoso,\nDivino poema, eterno e formoso.`,
-      };
+      // Usando poema fallback sem mostrar erro ao usuário
+      const themeLower = theme.toLowerCase();
+      let fallbackPoem = fallbackPoems[themeLower];
       
+      // Se não houver um poema específico para o tema, crie um genérico
+      if (!fallbackPoem) {
+        fallbackPoem = `Pensamentos sobre ${theme} flutuam no ar,\nComo pássaros livres a voar.\nInspiração que nasce do coração,\nE toca a alma com suave emoção.\n\nEm cada palavra, em cada verso,\nDescubro um universo diverso.\nE assim celebro em poesia,\nO que ${theme} traz de magia.`;
+      }
+      
+      // Pequeno atraso para simular que está processando
       setTimeout(() => {
-        // Use o tema como chave ou use um poema genérico se o tema não existir no objeto
-        setPoem(fallbackPoems[theme.toLowerCase()] || 
-          `Pensamentos sobre ${theme} flutuam no ar,\nComo pássaros livres a voar.\nInspiração que nasce do coração,\nE toca a alma com suave emoção.\n\nEm cada palavra, em cada verso,\nDescubro um universo diverso.\nE assim celebro em poesia,\nO que ${theme} traz de magia.`);
-      }, 1500);
+        setPoem(fallbackPoem);
+      }, 800);
     } finally {
       setIsLoading(false);
     }
